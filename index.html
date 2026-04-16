@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>小雞手抄 | 粉絲互動平台</title>
+    <link href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&family=Noto+Serif+TC:wght@600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --chick-yellow: #ffde59;
+            --ink: #2c2c2c;
+            --paper: #fdfaf5;
+            --font-calligraphy: 'Ma Shan Zheng', cursive;
+            --font-standard: 'Noto Serif TC', serif;
+        }
+
+        body {
+            background-color: var(--paper);
+            color: var(--ink);
+            font-family: var(--font-standard);
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        header {
+            background: var(--chick-yellow);
+            width: 100%;
+            padding: 50px 0;
+            text-align: center;
+            border-bottom: 4px solid var(--ink);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        .title { font-family: var(--font-calligraphy); font-size: 4.5rem; margin: 0; }
+
+        .container { max-width: 600px; width: 90%; margin: -30px auto 50px; }
+
+        .section-card {
+            background: white;
+            border: 3px solid var(--ink);
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: 10px 10px 0px var(--ink);
+        }
+
+        h2 { font-family: var(--font-calligraphy); font-size: 2rem; border-bottom: 2px dashed var(--chick-yellow); padding-bottom: 10px; }
+
+        /* 排行榜與置頂 */
+        .rank-item {
+            display: flex;
+            align-items: center;
+            padding: 12px;
+            border-bottom: 1px solid #eee;
+        }
+        .pinned {
+            background: #fff9c4;
+            border: 2px solid #fbc02d;
+            border-radius: 10px;
+            font-weight: bold;
+        }
+
+        /* 投稿表單 */
+        input, textarea {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border: 2px solid var(--ink);
+            border-radius: 8px;
+            font-family: var(--font-standard);
+        }
+
+        .warning {
+            background: #fff0f0;
+            border-left: 5px solid #ff4d4d;
+            padding: 15px;
+            margin: 15px 0;
+            color: #d32f2f;
+            font-size: 0.9rem;
+        }
+
+        .btn {
+            background: var(--ink);
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            width: 100%;
+            font-size: 1.1rem;
+            font-weight: bold;
+        }
+        .btn:hover { background: #555; }
+
+        .admin-footer { font-size: 0.8rem; color: #999; margin-top: 20px; text-align: center; }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="title">小雞手抄</div>
+    <p>—— 筆墨之間，遇見溫暖的你 ——</p>
+</header>
+
+<div class="container">
+    
+    <section class="section-card">
+        <h2>🐥 筆墨至交（人氣榜）</h2>
+        <div id="leaderboard">
+            <div class="rank-item pinned">
+                <span style="margin-right:10px;">👑</span>
+                <span id="pinned-fan">載入中...</span>
+                <span style="margin-left:auto; font-size: 0.8rem;">[管理員置頂]</span>
+            </div>
+            <div class="rank-item"><span>🥈</span> <span>小雞隊長</span><span style="margin-left:auto;">128 票</span></div>
+            <div class="rank-item"><span>🥉</span> <span>手抄愛好者</span><span style="margin-left:auto;">95 票</span></div>
+        </div>
+    </section>
+
+    <section class="section-card">
+        <h2>✍️ 給小雞的建議與投稿</h2>
+        <label>您的 Instagram 名稱</label>
+        <input type="text" id="ig-name" placeholder="@example_id">
+        
+        <label>建議內容 / 想要手抄的句子</label>
+        <textarea id="content" rows="4" placeholder="在這裡寫下你的想法..."></textarea>
+
+        <div class="warning">
+            <strong>⚠️ 重要提醒：</strong><br>
+            若您的投稿被選中，小雞會在發文時標註您為「協作者」。請務必留意 IG 通知並<strong>點擊接受協作者邀請</strong>，作品才會同步顯示在您的頁面上喔！
+        </div>
+
+        <button class="btn" onclick="submitData()">送出投稿</button>
+    </section>
+
+    <div class="admin-footer">
+        管理員：jacob.wu1523@gmail.com | <a href="#" onclick="forgotPassword()">忘記密碼？</a>
+    </div>
+</div>
+
+<script>
+    // 這裡未來放 Firebase 的初始化代碼 (完全免費)
+    
+    function submitData() {
+        const ig = document.getElementById('ig-name').value;
+        if(!ig) {
+            alert("請輸入 IG 名稱，小雞才找得到你喔！");
+            return;
+        }
+        alert("投稿已送出！小雞收到囉 🐥");
+    }
+
+    function forgotPassword() {
+        alert("系統已發送重設密碼信件至：jacob.wu1523@gmail.com");
+    }
+
+    // 模擬管理員置頂功能
+    window.onload = function() {
+        document.getElementById('pinned-fan').innerText = "Jacob_Wu (最愛粉絲)";
+    };
+</script>
+
+</body>
+</html>
+
