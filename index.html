@@ -4,75 +4,44 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>小雞手抄 | 專屬互動平台</title>
-    <link href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&family=Zhi+Mang+Xing&family=Noto+Sans+TC:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&family=Zhi+Mang+Xing&family=Noto+Sans+TC:wght@500;700&display=swap" rel="stylesheet">
     <style>
-        /* 定義書法字體優先順序 */
-        @font-face {
-            font-family: 'ZuiQingFeng';
-            src: local('標楷體'), local('Kaiti'); /* 這裡會優先尋找系統內的楷體作為基礎 */
-        }
-
         :root { 
             --chick: #ffde59; --ink: #2c2c2c; --paper: #fdfaf5; 
-            /* 標題強制使用多重書法備援，確保「雞」字美觀 */
-            --calligraphy: "Ma Shan Zheng", "Zhi Mang Xing", "ZuiQingFeng", "標楷體", cursive;
+            /* 醉清風風格備援：馬善政、繁體楷體 */
+            --calligraphy: "Ma Shan Zheng", "Zhi Mang Xing", "DFKai-SB", "標楷體", cursive;
             --standard: 'Noto Sans TC', sans-serif;
         }
 
-        body { background: var(--paper); color: var(--ink); font-family: var(--standard); margin: 0; display: flex; flex-direction: column; align-items: center; }
-        
-        header { background: var(--chick); width: 100%; padding: 40px 0; text-align: center; border-bottom: 5px solid var(--ink); }
+        body { background: var(--paper); color: var(--ink); font-family: var(--standard); margin: 0; padding-bottom: 50px; display: flex; flex-direction: column; align-items: center; }
+        header { background: var(--chick); width: 100%; padding: 40px 0; text-align: center; border-bottom: 5px solid var(--ink); margin-bottom: 20px; }
         
         /* 標題字體修正 */
-        .main-title { 
-            font-family: var(--calligraphy); 
-            font-size: 5rem; 
-            margin: 0; 
-            font-weight: normal;
-            color: var(--ink);
-            text-shadow: 2px 2px 0px rgba(0,0,0,0.1);
-        }
+        .main-title { font-family: var(--calligraphy); font-size: 5.5rem; margin: 0; font-weight: normal; line-height: 1; }
 
-        .container { max-width: 550px; width: 92%; margin: 20px auto; padding-bottom: 50px; }
+        .container { max-width: 550px; width: 92%; }
+        .card { background: white; border: 3px solid var(--ink); border-radius: 16px; padding: 20px; margin-bottom: 25px; box-shadow: 8px 8px 0 var(--ink); }
         
-        .card { 
-            background: white; border: 3px solid var(--ink); border-radius: 16px; 
-            padding: 20px; margin-bottom: 25px; box-shadow: 8px 8px 0 var(--ink); 
-            position: relative; 
-        }
+        h2 { font-family: var(--calligraphy); font-size: 2.8rem; margin: 0 0 15px 0; border-bottom: 2px solid var(--chick); display: inline-block; }
 
-        h2 { font-family: var(--calligraphy); font-size: 2.5rem; margin: 0 0 15px 0; color: var(--ink); }
-
-        /* 個人資料修改彈窗 */
-        #profile-modal { 
-            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
-            background: rgba(0,0,0,0.85); z-index: 1000; justify-content: center; align-items: center; 
-        }
-        .modal-content { 
-            background: white; padding: 30px; border-radius: 20px; width: 85%; max-width: 400px; 
-            border: 5px solid var(--ink); text-align: center;
-        }
+        /* 導航欄 */
+        #user-nav { background: #eee; padding: 12px; border-radius: 12px; margin-bottom: 20px; text-align: right; border: 1px solid #ccc; width: 100%; box-sizing: border-box; }
 
         /* 聊天室 */
-        #chat-box { 
-            height: 300px; overflow-y: auto; border: 2px solid #eee; border-radius: 12px; 
-            padding: 15px; background: #fafafa; margin-bottom: 10px; display: flex; flex-direction: column; 
-        }
-        .chat-msg { margin-bottom: 12px; padding: 10px 14px; border-radius: 15px; max-width: 85%; font-size: 1rem; line-height: 1.5; }
-        .msg-other { background: #e8e8e8; align-self: flex-start; }
-        .msg-me { background: var(--chick); align-self: flex-end; border: 1px solid #e1c145; }
+        #chat-box { height: 280px; overflow-y: auto; border: 2px solid #ddd; border-radius: 12px; padding: 15px; background: #fafafa; margin-bottom: 10px; display: flex; flex-direction: column; }
+        .chat-msg { margin-bottom: 12px; padding: 10px; border-radius: 12px; max-width: 85%; line-height: 1.4; font-size: 0.95rem; }
+        .msg-other { background: #e0e0e0; align-self: flex-start; }
+        .msg-me { background: var(--chick); align-self: flex-end; }
         .msg-admin { background: var(--ink); color: white; align-self: flex-start; border: 2px solid var(--chick); }
-        .msg-info { font-size: 0.7rem; opacity: 0.6; margin-bottom: 3px; display: block; font-weight: bold; }
 
-        input, textarea { width: 100%; padding: 12px; margin: 10px 0; border: 2px solid #ddd; border-radius: 10px; box-sizing: border-box; font-size: 1rem; font-family: var(--standard); }
-        
-        .btn { background: var(--ink); color: white; padding: 14px; border: none; border-radius: 10px; cursor: pointer; width: 100%; font-weight: bold; font-size: 1.1rem; transition: 0.2s; }
-        .btn:hover { transform: translateY(-2px); box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
-        .btn-sm { width: auto; padding: 6px 15px; font-size: 0.85rem; margin-left: 8px; border-radius: 8px; }
+        /* 輸入框與按鈕 */
+        input, textarea { width: 100%; padding: 12px; margin: 10px 0; border: 2px solid #ddd; border-radius: 10px; box-sizing: border-box; font-family: var(--standard); font-size: 1rem; }
+        .btn { background: var(--ink); color: white; padding: 14px; border: none; border-radius: 10px; cursor: pointer; width: 100%; font-weight: bold; font-size: 1.1rem; }
+        .btn-sm { width: auto; padding: 5px 12px; font-size: 0.8rem; margin-left: 5px; }
 
-        #user-nav { width: 100%; text-align: right; margin-bottom: 15px; font-size: 0.9rem; background: #f0f0f0; padding: 12px; border-radius: 12px; border: 1px solid #ddd; }
-        .rank-item { display: flex; justify-content: space-between; padding: 15px; border-bottom: 1px solid #eee; align-items: center; }
-        .pinned { background: #fffde7; border: 2px solid var(--chick); border-radius: 12px; font-weight: bold; }
+        /* 彈窗 */
+        #profile-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 1000; justify-content: center; align-items: center; }
+        .modal-content { background: white; padding: 30px; border-radius: 20px; width: 85%; max-width: 380px; text-align: center; border: 5px solid var(--ink); }
     </style>
 </head>
 <body>
@@ -83,44 +52,41 @@
 
 <div class="container">
     <div id="user-nav">
-        <span id="nav-info">正在檢查登入狀態...</span>
-        <button id="edit-profile-btn" class="btn btn-sm" style="display:none;">修改資料</button>
-        <button id="logout-btn" class="btn btn-sm" style="background:#ff4d4d; display:none;">登出</button>
+        <span id="nav-info">載入中...</span>
+        <button id="logout-btn" class="btn btn-sm" style="display:none; background:#ff4d4d;">登出</button>
     </div>
 
     <section class="card">
         <h2>墨友排行</h2>
-        <div id="leaderboard-list">名單裝載中...</div>
+        <div id="leaderboard-list">讀取中...</div>
     </section>
 
     <section class="card">
         <h2>和小雞聊天</h2>
         <div id="chat-box"></div>
-        <div style="display:flex; gap:8px;">
-            <input type="text" id="chat-input" placeholder="想對小雞說什麼？">
-            <button class="btn btn-sm" onclick="sendChatMessage()" style="width: 80px;">發送</button>
+        <div style="display:flex; gap:5px;">
+            <input type="text" id="chat-input" placeholder="說點什麼...">
+            <button class="btn btn-sm" onclick="sendChatMessage()" style="width:70px;">發送</button>
         </div>
     </section>
 
-    <button id="login-btn" class="btn" style="background:white; color:var(--ink); border:3px solid var(--ink); font-size: 1.2rem; display:none;">👤 Google 帳號登入 / 註冊</button>
+    <button id="login-btn" class="btn" style="background:white; color:var(--ink); border:3px solid var(--ink); display:none;">👤 Google 登入</button>
 </div>
 
 <div id="profile-modal">
     <div class="modal-content">
-        <h2 style="font-size: 2rem;">基本資料</h2>
-        <p style="color: #666; margin-bottom: 20px;">請設定在網頁上顯示的暱稱</p>
-        <input type="text" id="p-nickname" placeholder="想要被稱呼的暱稱">
-        <input type="text" id="p-ig" placeholder="您的 IG 帳號 (如: @jacob_wu)">
-        <button class="btn" onclick="saveProfile()">儲存並開始互動</button>
+        <h2 style="font-size:2rem;">歡迎加入小雞手抄</h2>
+        <input type="text" id="p-nickname" placeholder="想要顯示的暱稱">
+        <input type="text" id="p-ig" placeholder="您的 IG (例: @jacob)">
+        <button class="btn" onclick="saveProfile()">儲存並進入</button>
     </div>
 </div>
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-    import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-    import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, limit, doc, updateDoc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+    import { getAuth, signInWithRedirect, getRedirectResult, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+    import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, limit, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-    // 您的 Firebase 配置 (已校對)
     const firebaseConfig = {
         apiKey: "AIzaSyAOnZ6ZHMPS2S3-4C22IQetiIlSGV-OaEU",
         authDomain: "chicken-39494.firebaseapp.com",
@@ -140,118 +106,79 @@
     let userProfile = null;
     const ADMIN_EMAIL = "jacob.wu1523@gmail.com";
 
-    // 登入邏輯 (加入錯誤回報)
-    document.getElementById('login-btn').onclick = async () => {
-        try {
-            await signInWithPopup(auth, provider);
-        } catch (error) {
-            console.error(error);
-            alert("登入失敗！錯誤原因：" + error.message + "\n請確認 Firebase 後台是否已加入目前的網域。");
-        }
-    };
-
-    // 登出邏輯
+    // 改用重導向登入，避免 Vercel 彈窗錯誤
+    document.getElementById('login-btn').onclick = () => signInWithRedirect(auth, provider);
     document.getElementById('logout-btn').onclick = () => signOut(auth).then(() => location.reload());
 
-    // 修改資料按鈕
-    document.getElementById('edit-profile-btn').onclick = () => {
-        document.getElementById('p-nickname').value = userProfile.nickname || "";
-        document.getElementById('p-ig').value = userProfile.ig || "";
-        document.getElementById('profile-modal').style.display = 'flex';
-    };
+    // 檢查重導向結果
+    getRedirectResult(auth).catch(err => alert("登入錯誤：" + err.message));
 
-    // 監聽登入狀態
     onAuthStateChanged(auth, async (user) => {
-        currentUser = user;
         const navInfo = document.getElementById('nav-info');
         const loginBtn = document.getElementById('login-btn');
-        
+        const logoutBtn = document.getElementById('logout-btn');
+
         if (user) {
-            const userRef = doc(db, "users", user.uid);
-            const userSnap = await getDoc(userRef);
-            
+            currentUser = user;
+            const userSnap = await getDoc(doc(db, "users", user.uid));
             if (userSnap.exists()) {
                 userProfile = userSnap.data();
-                navInfo.innerText = `👋 ${userProfile.nickname} (${userProfile.ig})`;
+                navInfo.innerText = `👋 ${userProfile.nickname}`;
                 loginBtn.style.display = 'none';
-                document.getElementById('logout-btn').style.display = 'inline-block';
-                document.getElementById('edit-profile-btn').style.display = 'inline-block';
+                logoutBtn.style.display = 'inline-block';
             } else {
-                // 新用戶，顯示彈窗要求填寫資料
                 document.getElementById('profile-modal').style.display = 'flex';
-                navInfo.innerText = "請完成基本資料填寫";
             }
         } else {
-            navInfo.innerText = "尚未登入，請先登入後再互動";
+            navInfo.innerText = "尚未登入";
             loginBtn.style.display = 'block';
-            document.getElementById('logout-btn').style.display = 'none';
-            document.getElementById('edit-profile-btn').style.display = 'none';
+            logoutBtn.style.display = 'none';
         }
     });
 
-    // 儲存/更新用戶資料
     window.saveProfile = async () => {
         const nick = document.getElementById('p-nickname').value.trim();
         const ig = document.getElementById('p-ig').value.trim();
-        if(!nick || !ig) return alert("暱稱與 IG 都要填寫喔！");
-        
-        try {
-            await setDoc(doc(db, "users", currentUser.uid), {
-                nickname: nick,
-                ig: ig,
-                email: currentUser.email,
-                updatedAt: Date.now()
-            });
-            document.getElementById('profile-modal').style.display = 'none';
-            alert("資料儲存成功！");
-            location.reload();
-        } catch (e) {
-            alert("儲存失敗，請確認資料庫規則已開啟。");
-        }
+        if(!nick || !ig) return alert("請完整填寫喔！");
+        await setDoc(doc(db, "users", currentUser.uid), { nickname: nick, ig: ig, email: currentUser.email });
+        location.reload();
     };
 
-    // 聊天發送
     window.sendChatMessage = async () => {
         const text = document.getElementById('chat-input').value.trim();
-        if (!userProfile) return alert("請先完成資料填寫！");
-        if (!text) return;
-        
-        await addDoc(collection(db, "chats"), {
-            uid: currentUser.uid,
-            nickname: userProfile.nickname,
-            email: currentUser.email,
-            text: text,
-            timestamp: Date.now()
+        if (!userProfile || !text) return;
+        await addDoc(collection(db, "chats"), { 
+            nickname: userProfile.nickname, 
+            email: currentUser.email, 
+            text, 
+            timestamp: Date.now() 
         });
         document.getElementById('chat-input').value = "";
     };
 
-    // 監聽聊天室
-    onSnapshot(query(collection(db, "chats"), orderBy("timestamp", "asc"), limit(60)), (snap) => {
+    onSnapshot(query(collection(db, "chats"), orderBy("timestamp", "asc"), limit(50)), (snap) => {
         const box = document.getElementById('chat-box');
         box.innerHTML = "";
         snap.forEach(d => {
             const m = d.data();
             const div = document.createElement('div');
-            let type = (m.email === ADMIN_EMAIL) ? "msg-admin" : (currentUser && m.uid === currentUser.uid ? "msg-me" : "msg-other");
+            let type = (m.email === ADMIN_EMAIL) ? "msg-admin" : (currentUser && m.email === currentUser.email ? "msg-me" : "msg-other");
             div.className = `chat-msg ${type}`;
-            div.innerHTML = `<span class="msg-info">${m.nickname}</span>${m.text}`;
+            div.innerHTML = `<small style="display:block; font-size:10px; opacity:0.6;">${m.nickname}</small>${m.text}`;
             box.appendChild(div);
         });
         box.scrollTop = box.scrollHeight;
     });
 
-    // 監聽排行榜 (以用戶名單為準)
     onSnapshot(collection(db, "users"), (snap) => {
         const list = document.getElementById('leaderboard-list');
         list.innerHTML = "";
-        let users = [];
-        snap.forEach(d => users.push({ id: d.id, ...d.data() }));
-        
-        users.forEach(u => {
+        snap.forEach(d => {
+            const u = d.data();
             const div = document.createElement('div');
-            div.className = "rank-item";
-            div.innerHTML = `<span>🖋️ <strong>${u.nickname}</strong></span><small style="color:#888;">${u.ig}</small>`;
+            div.style.padding = "10px";
+            div.style.borderBottom = "1px solid #eee";
+            div.innerHTML = `<strong>${u.nickname}</strong> <small style="color:#888">${u.ig}</small>`;
             list.appendChild(div);
         });
     });
