@@ -3,36 +3,207 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>雞王粉絲互動系統</title>
+    <title>雞王互動系統</title>
     <link href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
+    <style>
+        :root {
+            --gold: #FFD700;
+            --black: #1a1a1a;
+            --fan-yellow: #fff176;
+        }
+
+        body {
+            background-color: var(--black);
+            color: white;
+            font-family: sans-serif;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+
+        /* 標題與書法字 */
+        header {
+            text-align: center;
+            padding: 20px;
+            border-bottom: 1px solid #333;
+        }
+
+        .logo {
+            font-family: 'Ma Shan Zheng', cursive;
+            font-size: 80px;
+            color: var(--gold);
+            margin: 0;
+            line-height: 1;
+        }
+
+        /* 聊天區域 */
+        #chat-box {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .msg {
+            max-width: 80%;
+            padding: 10px 15px;
+            border-radius: 15px;
+            position: relative;
+        }
+
+        /* 粉絲樣式：黃色泡泡 */
+        .fan-msg {
+            background-color: var(--fan-yellow);
+            color: black;
+            align-self: flex-start;
+            border-bottom-left-radius: 2px;
+        }
+
+        /* 管理員樣式：黑底黃邊 */
+        .admin-msg {
+            background-color: black;
+            color: var(--gold);
+            border: 2px solid var(--gold);
+            align-self: flex-end;
+            border-bottom-right-radius: 2px;
+        }
+
+        .username {
+            font-size: 12px;
+            display: block;
+            margin-bottom: 4px;
+            font-weight: bold;
+        }
+
+        /* 底部輸入區 */
+        .input-area {
+            padding: 20px;
+            background: #222;
+            display: flex;
+            gap: 10px;
+        }
+
+        input {
+            flex: 1;
+            padding: 10px;
+            border-radius: 5px;
+            border: none;
+        }
+
+        button {
+            padding: 10px 20px;
+            background: var(--gold);
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        /* 登入彈窗 (Modal) */
+        #login-modal, #profile-modal {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.9);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+        }
+
+        .modal-content {
+            background: #333;
+            padding: 30px;
+            border-radius: 10px;
+            text-align: center;
+            border: 1px solid var(--gold);
+        }
+
+        .hidden { display: none !important; }
+    </style>
 </head>
 <body>
 
-    <div id="app">
-        <header>
-            <h1 class="calligraphy">雞</h1>
-            <p>粉絲專屬即時對話</p>
-        </header>
-
-        <main id="chat-container">
-            <div class="message fan-bubble">
-                <span class="username">雞粉小明:</span>
-                <p>這隻雞太霸氣了吧！</p>
-            </div>
-
-            <div class="message admin-bubble">
-                <span class="username">Jacob Wu (Admin):</span>
-                <p>歡迎來到我的地盤，保持禮貌。</p>
-            </div>
-        </main>
-
-        <footer id="input-area">
-            <input type="text" id="user-input" placeholder="說點什麼..." maxlength="200">
-            <button id="send-btn">發送</button>
-        </footer>
+    <div id="login-modal">
+        <div class="modal-content">
+            <h2 class="logo">雞</h2>
+            <p>請先登入 Google 以進入系統</p>
+            <button onclick="login()">Google 帳號登入</button>
+        </div>
     </div>
 
-    <script src="app.js"></script>
+    <div id="profile-modal" class="hidden">
+        <div class="modal-content">
+            <h3>首次登入資料填寫</h3>
+            <input type="text" id="new-nickname" placeholder="請輸入暱稱"><br><br>
+            <input type="text" id="new-ig" placeholder="請輸入 IG 帳號"><br><br>
+            <button onclick="saveProfile()">儲存並進入</button>
+        </div>
+    </div>
+
+    <header>
+        <h1 class="logo">雞</h1>
+        <span>ADMIN: jacob.wu1523@gmail.com</span>
+    </header>
+
+    <div id="chat-box">
+        </div>
+
+    <div class="input-area">
+        <input type="text" id="msg-input" placeholder="輸入訊息..." maxlength="200">
+        <button onclick="sendMessage()">發送</button>
+    </div>
+
+    <script>
+        // 模擬當前用戶資料
+        let currentUser = null;
+
+        // 1. 模擬登入
+        function login() {
+            // 實作時這裡接 Firebase Google Auth
+            console.log("嘗試登入...");
+            document.getElementById('login-modal').classList.add('hidden');
+            
+            // 模擬檢查資料庫是否存在該用戶資料
+            let isFirstTime = true; 
+            if(isFirstTime) {
+                document.getElementById('profile-modal').classList.remove('hidden');
+            }
+        }
+
+        // 2. 儲存個人資料
+        function saveProfile() {
+            const nick = document.getElementById('new-nickname').value;
+            const ig = document.getElementById('new-ig').value;
+            if(!nick || !ig) return alert("請填寫完整！");
+            
+            currentUser = { nickname: nick, ig: ig, email: "user@example.com" };
+            document.getElementById('profile-modal').classList.add('hidden');
+            alert("歡迎進場，" + nick);
+        }
+
+        // 3. 發送訊息
+        function sendMessage() {
+            const input = document.getElementById('msg-input');
+            if(!input.value) return;
+
+            const chatBox = document.getElementById('chat-box');
+            const msgDiv = document.createElement('div');
+            
+            // 判斷是否為管理員 (根據 Email)
+            const isAdmin = currentUser?.email === "jacob.wu1523@gmail.com";
+            
+            msgDiv.className = `msg ${isAdmin ? 'admin-msg' : 'fan-msg'}`;
+            msgDiv.innerHTML = `
+                <span class="username">${currentUser?.nickname || '未命名'}</span>
+                <p>${input.value}</p>
+            `;
+            
+            chatBox.appendChild(msgDiv);
+            input.value = "";
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
+    </script>
 </body>
 </html>
