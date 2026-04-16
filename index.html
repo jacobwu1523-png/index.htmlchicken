@@ -4,51 +4,120 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>小雞手抄 | 粉絲互動平台</title>
-    <link href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&family=Noto+Serif+TC:wght@600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&family=Noto+Sans+TC:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        :root { --chick: #ffde59; --ink: #2c2c2c; --paper: #fdfaf5; --calligraphy: 'Ma Shan Zheng', cursive; }
-        body { background: var(--paper); color: var(--ink); font-family: 'Noto Serif TC', serif; margin: 0; display: flex; flex-direction: column; align-items: center; }
-        header { background: var(--chick); width: 100%; padding: 40px 0; text-align: center; border-bottom: 4px solid var(--ink); }
-        .container { max-width: 500px; width: 90%; margin: 20px auto; }
-        .card { background: white; border: 3px solid var(--ink); border-radius: 12px; padding: 20px; margin-bottom: 20px; box-shadow: 8px 8px 0 var(--ink); }
-        h2 { font-family: var(--calligraphy); font-size: 2.2rem; margin-top: 0; border-bottom: 2px dashed var(--chick); }
-        input, textarea { width: 100%; padding: 12px; margin: 10px 0; border: 2px solid var(--ink); border-radius: 8px; box-sizing: border-box; font-size: 1rem; }
-        .btn { background: var(--ink); color: white; padding: 12px; border: none; border-radius: 8px; cursor: pointer; width: 100%; font-weight: bold; font-size: 1.1rem; }
-        .warning { background: #fff3f3; border-left: 4px solid #ff4d4d; padding: 12px; font-size: 0.9rem; color: #b30000; margin: 10px 0; line-height: 1.5; }
-        .rank-item { display: flex; justify-content: space-between; align-items: center; padding: 15px; border-bottom: 1px dashed #ccc; transition: 0.3s; }
-        .pinned { background: #fffbe6; border: 2px solid #fbc02d; border-radius: 10px; font-weight: bold; margin-bottom: 10px; }
-        #admin-panel { display: none; background: #ffebee; color: #c62828; padding: 10px; border-radius: 8px; font-size: 0.85rem; text-align: center; margin-bottom: 10px; border: 1px solid #ef9a9a; }
-        #user-info { text-align: right; margin-bottom: 10px; font-weight: bold; color: #555; }
+        :root { 
+            --chick: #ffde59; 
+            --ink: #2c2c2c; 
+            --paper: #fdfaf5; 
+            --calligraphy: 'Ma Shan Zheng', cursive;
+            --standard: 'Noto Sans TC', sans-serif;
+        }
+        body { 
+            background: var(--paper); 
+            color: var(--ink); 
+            font-family: var(--standard); 
+            margin: 0; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            -webkit-font-smoothing: antialiased;
+        }
+        header { 
+            background: var(--chick); 
+            width: 100%; 
+            padding: 50px 0; 
+            text-align: center; 
+            border-bottom: 5px solid var(--ink); 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+        .container { max-width: 550px; width: 92%; margin: 30px auto; }
+        .card { 
+            background: white; 
+            border: 3px solid var(--ink); 
+            border-radius: 16px; 
+            padding: 25px; 
+            margin-bottom: 30px; 
+            box-shadow: 10px 10px 0 var(--ink); 
+        }
+        h2 { 
+            font-family: var(--calligraphy); 
+            font-size: 2.5rem; 
+            margin: 0 0 15px 0; 
+            color: var(--ink);
+            display: flex;
+            align-items: center;
+        }
+        h2::before { content: "🐥 "; font-size: 1.5rem; margin-right: 10px; }
+        
+        input, textarea { 
+            width: 100%; padding: 15px; margin: 12px 0; 
+            border: 2px solid #ddd; border-radius: 12px; 
+            box-sizing: border-box; font-size: 1rem; font-family: var(--standard);
+            transition: border-color 0.3s;
+        }
+        input:focus, textarea:focus { border-color: var(--chick); outline: none; }
+        
+        .btn { 
+            background: var(--ink); color: white; padding: 16px; 
+            border: none; border-radius: 12px; cursor: pointer; 
+            width: 100%; font-weight: bold; font-size: 1.1rem; 
+            transition: transform 0.1s, background 0.3s;
+        }
+        .btn:hover { background: #444; }
+        .btn:active { transform: scale(0.98); }
+
+        .warning { 
+            background: #fff8e1; border-left: 5px solid #ffa000; 
+            padding: 15px; font-size: 0.95rem; color: #795548; 
+            margin: 15px 0; border-radius: 0 12px 12px 0;
+        }
+        .rank-item { 
+            display: flex; justify-content: space-between; align-items: center; 
+            padding: 18px; border-bottom: 1px solid #eee; 
+            cursor: pointer; transition: 0.2s;
+        }
+        .rank-item:hover { background: #fcfcfc; }
+        .pinned { background: #fffde7; border: 2px solid var(--chick); border-radius: 12px; font-weight: bold; margin-bottom: 15px; }
+        
+        #admin-panel { 
+            display: none; background: #e3f2fd; color: #1565c0; 
+            padding: 12px; border-radius: 10px; font-size: 0.9rem; 
+            text-align: center; margin-bottom: 20px; border: 1px solid #bbdefb; 
+        }
+        #user-info { text-align: right; margin-bottom: 15px; font-weight: bold; color: #666; font-size: 0.9rem; }
     </style>
 </head>
 <body>
 
 <header>
-    <h1 style="font-family: var(--calligraphy); font-size: 4rem; margin:0;">小雞手抄</h1>
-    <p style="margin: 5px 0 0 0;">—— 筆尖的溫度，為你而寫 ——</p>
+    <h1 style="font-family: var(--calligraphy); font-size: 4.5rem; margin:0; letter-spacing: 5px;">小雞手抄</h1>
+    <p style="margin: 10px 0 0 0; font-weight: 300; letter-spacing: 2px;">—— 寫一段話，溫暖一個靈魂 ——</p>
 </header>
 
 <div class="container">
-    <div id="user-info">尚未登入</div>
+    <div id="user-info">載入中...</div>
 
     <section class="card">
-        <h2 style="font-family: var(--calligraphy);">🐥 墨友排行</h2>
-        <div id="admin-panel">📢 Jacob 您好！您可以點擊下方名單直接「置頂」某位粉絲。</div>
-        <div id="leaderboard-list">正在加載名單...</div>
+        <h2>墨友排行</h2>
+        <div id="admin-panel">✨ 管理員 Jacob 您好！點擊名單即可快速置頂。</div>
+        <div id="leaderboard-list">正在加載溫暖名單...</div>
     </section>
 
     <section class="card">
-        <h2 style="font-family: var(--calligraphy);">✍️ 我要投稿</h2>
-        <input type="text" id="ig-input" placeholder="您的 IG 帳號 (例如: @chick_handwriting)">
-        <textarea id="msg-input" rows="4" placeholder="想看小雞抄寫什麼內容？或是給小雞的建議..."></textarea>
+        <h2>我也要投稿</h2>
+        <input type="text" id="ig-input" placeholder="你的 Instagram 帳號 (例如: @chick_handwriting)">
+        <textarea id="msg-input" rows="4" placeholder="想看小雞抄寫什麼？或者是想對我說的話..."></textarea>
         <div class="warning">
-            <strong>🐥 小雞提醒：</strong><br>
-            若投稿被選中，我會標註您為協作者。請務必記得在 IG 接受邀請，作品才會出現在您的主頁喔！
+            <strong>💡 記得點開邀請：</strong><br>
+            若被選中，小雞會發送「協作者邀請」。請務必到 IG 訊息點擊接受，作品才會出現在你的主頁喔！
         </div>
-        <button class="btn" onclick="submitPost()">送出投稿</button>
+        <button class="btn" onclick="submitPost()">送出溫暖投稿</button>
     </section>
 
-    <button id="login-btn" class="btn" style="background: white; color: var(--ink); border: 2px solid var(--ink);">粉絲 Google 快速註冊 / 登入</button>
+    <button id="login-btn" class="btn" style="background: white; color: var(--ink); border: 3px solid var(--ink); margin-bottom: 50px;">
+        👤 粉絲快速登入 / 註冊
+    </button>
 </div>
 
 <script type="module">
@@ -56,7 +125,6 @@
     import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
     import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, doc, updateDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-    // 這是你剛剛提供的配置
     const firebaseConfig = {
         apiKey: "AIzaSyAOnZ6ZHMPS2S3-4C22IQetiIlSGV-OaEU",
         authDomain: "chicken-39494.firebaseapp.com",
@@ -75,10 +143,15 @@
     let currentUser = null;
     const ADMIN_EMAIL = "jacob.wu1523@gmail.com";
 
-    // 登入按鈕
-    document.getElementById('login-btn').onclick = () => signInWithPopup(auth, provider).catch(err => alert("登入失敗: " + err.message));
+    // 登入功能
+    document.getElementById('login-btn').onclick = () => {
+        signInWithPopup(auth, provider).catch(err => {
+            console.error(err);
+            alert("登入失敗，請確認是否已將網域加入 Firebase 的『授權網域』中！");
+        });
+    };
 
-    // 追蹤登入狀態
+    // 狀態監聽
     onAuthStateChanged(auth, (user) => {
         currentUser = user;
         const infoDiv = document.getElementById('user-info');
@@ -86,11 +159,9 @@
         const adminPanel = document.getElementById('admin-panel');
 
         if (user) {
-            infoDiv.innerText = `👋 歡迎，${user.displayName}`;
+            infoDiv.innerText = `Logged in as: ${user.displayName}`;
             loginBtn.style.display = 'none';
-            if (user.email === ADMIN_EMAIL) {
-                adminPanel.style.display = 'block';
-            }
+            if (user.email === ADMIN_EMAIL) adminPanel.style.display = 'block';
         } else {
             infoDiv.innerText = "尚未登入";
             loginBtn.style.display = 'block';
@@ -102,9 +173,8 @@
     window.submitPost = async () => {
         const ig = document.getElementById('ig-input').value.trim();
         const msg = document.getElementById('msg-input').value.trim();
-        
-        if (!ig || !msg) return alert("請填寫 IG 帳號與內容喔！");
-        if (!currentUser) return alert("請先點擊下方按鈕登入，才能送出投稿喔！");
+        if (!currentUser) return alert("請先登入後再投稿喔！");
+        if (!ig || !msg) return alert("欄位都要填寫喔！");
 
         try {
             await addDoc(collection(db, "posts"), {
@@ -112,42 +182,34 @@
                 message: msg,
                 votes: 0,
                 isPinned: false,
-                userEmail: currentUser.email,
                 timestamp: Date.now()
             });
-            alert("送出成功！小雞收到你的溫暖了 🐥");
+            alert("成功送出！小雞收到了 🐥");
             document.getElementById('msg-input').value = "";
         } catch (e) {
-            alert("送出失敗，請檢查資料庫權限設定。");
+            alert("投稿失敗，請確認 Firestore 規則已開啟。");
         }
     };
 
-    // 即時抓取排行榜數據
+    // 排行榜即時更新
     onSnapshot(collection(db, "posts"), (snapshot) => {
         const list = document.getElementById('leaderboard-list');
         list.innerHTML = "";
         let posts = [];
         snapshot.forEach(doc => posts.push({ id: doc.id, ...doc.data() }));
 
-        // 排序：置頂優先，其餘按時間/票數
         posts.sort((a, b) => (b.isPinned - a.isPinned) || (b.timestamp - a.timestamp));
-
-        if (posts.length === 0) {
-            list.innerHTML = "<p style='color:#888; text-align:center;'>目前還沒有墨友投稿，快來當第一個！</p>";
-        }
 
         posts.forEach(post => {
             const div = document.createElement('div');
             div.className = `rank-item ${post.isPinned ? 'pinned' : ''}`;
             div.innerHTML = `
-                <div>
-                    <span>${post.isPinned ? '🌟' : '🖋️'} <strong>${post.ig}</strong></span><br>
-                    <small style="color:#666;">${post.message}</small>
+                <div style="flex:1">
+                    <span style="font-size:1.1rem">${post.isPinned ? '🌟' : '✒️'} <strong>${post.ig}</strong></span><br>
+                    <small style="color:#777; font-size:0.9rem">${post.message}</small>
                 </div>
-                ${currentUser && currentUser.email === ADMIN_EMAIL ? '<button style="font-size:10px;">切換置頂</button>' : ''}
             `;
             
-            // 管理員點擊置頂邏輯
             div.onclick = async () => {
                 if (currentUser && currentUser.email === ADMIN_EMAIL) {
                     await updateDoc(doc(db, "posts", post.id), { isPinned: !post.isPinned });
