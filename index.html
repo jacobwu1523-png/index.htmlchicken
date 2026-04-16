@@ -4,13 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>小雞手抄 | 粉絲互動平台</title>
-    <link href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&family=Noto+Sans+TC:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&family=Zhi+Mang+Xing&family=Noto+Sans+TC:wght@400;700&display=swap" rel="stylesheet">
     <style>
         :root { 
             --chick: #ffde59; 
             --ink: #2c2c2c; 
             --paper: #fdfaf5; 
-            --calligraphy: 'Ma Shan Zheng', cursive;
+            --calligraphy: 'Ma Shan Zheng', 'Zhi Mang Xing', cursive;
             --standard: 'Noto Sans TC', sans-serif;
         }
         body { 
@@ -21,109 +21,92 @@
             display: flex; 
             flex-direction: column; 
             align-items: center; 
-            -webkit-font-smoothing: antialiased;
         }
         header { 
             background: var(--chick); 
             width: 100%; 
-            padding: 50px 0; 
+            padding: 40px 0; 
             text-align: center; 
             border-bottom: 5px solid var(--ink); 
             box-shadow: 0 4px 15px rgba(0,0,0,0.05);
         }
-        .container { max-width: 550px; width: 92%; margin: 30px auto; }
+        .main-title { 
+            font-family: var(--calligraphy); 
+            font-size: 4.5rem; 
+            margin: 0; 
+            line-height: 1.2;
+        }
+        .container { max-width: 550px; width: 92%; margin: 20px auto; }
         .card { 
             background: white; 
             border: 3px solid var(--ink); 
             border-radius: 16px; 
-            padding: 25px; 
-            margin-bottom: 30px; 
-            box-shadow: 10px 10px 0 var(--ink); 
+            padding: 20px; 
+            margin-bottom: 25px; 
+            box-shadow: 8px 8px 0 var(--ink); 
         }
-        h2 { 
-            font-family: var(--calligraphy); 
-            font-size: 2.5rem; 
-            margin: 0 0 15px 0; 
-            color: var(--ink);
-            display: flex;
-            align-items: center;
-        }
-        h2::before { content: "🐥 "; font-size: 1.5rem; margin-right: 10px; }
+        h2 { font-family: var(--calligraphy); font-size: 2.2rem; margin: 0 0 15px 0; border-bottom: 2px solid var(--chick); display: inline-block; }
         
-        input, textarea { 
-            width: 100%; padding: 15px; margin: 12px 0; 
-            border: 2px solid #ddd; border-radius: 12px; 
-            box-sizing: border-box; font-size: 1rem; font-family: var(--standard);
-            transition: border-color 0.3s;
-        }
-        input:focus, textarea:focus { border-color: var(--chick); outline: none; }
-        
-        .btn { 
-            background: var(--ink); color: white; padding: 16px; 
-            border: none; border-radius: 12px; cursor: pointer; 
-            width: 100%; font-weight: bold; font-size: 1.1rem; 
-            transition: transform 0.1s, background 0.3s;
-        }
-        .btn:hover { background: #444; }
-        .btn:active { transform: scale(0.98); }
+        /* 聊天室樣式 */
+        #chat-box { height: 250px; overflow-y: auto; border: 2px solid #eee; border-radius: 12px; padding: 15px; background: #fafafa; margin-bottom: 10px; display: flex; flex-direction: column; }
+        .chat-msg { margin-bottom: 10px; padding: 8px 12px; border-radius: 15px; max-width: 80%; font-size: 0.9rem; position: relative; }
+        .msg-other { background: #eee; align-self: flex-start; }
+        .msg-me { background: var(--chick); align-self: flex-end; }
+        .msg-admin { background: var(--ink); color: white; align-self: flex-start; border: 2px solid var(--chick); }
+        .chat-input-group { display: flex; gap: 8px; }
+        .chat-input-group input { margin: 0; flex: 1; }
 
-        .warning { 
-            background: #fff8e1; border-left: 5px solid #ffa000; 
-            padding: 15px; font-size: 0.95rem; color: #795548; 
-            margin: 15px 0; border-radius: 0 12px 12px 0;
-        }
-        .rank-item { 
-            display: flex; justify-content: space-between; align-items: center; 
-            padding: 18px; border-bottom: 1px solid #eee; 
-            cursor: pointer; transition: 0.2s;
-        }
-        .rank-item:hover { background: #fcfcfc; }
-        .pinned { background: #fffde7; border: 2px solid var(--chick); border-radius: 12px; font-weight: bold; margin-bottom: 15px; }
+        input, textarea { width: 100%; padding: 12px; margin: 10px 0; border: 2px solid #ddd; border-radius: 10px; box-sizing: border-box; font-family: var(--standard); }
+        .btn { background: var(--ink); color: white; padding: 12px; border: none; border-radius: 10px; cursor: pointer; width: 100%; font-weight: bold; }
+        .btn-sm { width: auto; padding: 5px 15px; font-size: 0.8rem; }
+        .btn-logout { background: #ff4d4d; margin-left: 10px; }
         
-        #admin-panel { 
-            display: none; background: #e3f2fd; color: #1565c0; 
-            padding: 12px; border-radius: 10px; font-size: 0.9rem; 
-            text-align: center; margin-bottom: 20px; border: 1px solid #bbdefb; 
-        }
-        #user-info { text-align: right; margin-bottom: 15px; font-weight: bold; color: #666; font-size: 0.9rem; }
+        .rank-item { display: flex; justify-content: space-between; padding: 12px; border-bottom: 1px solid #eee; cursor: pointer; }
+        .pinned { background: #fffde7; border: 2px solid var(--chick); border-radius: 10px; font-weight: bold; }
+        #user-info { width: 100%; text-align: right; margin-bottom: 10px; font-size: 0.85rem; }
     </style>
 </head>
 <body>
 
 <header>
-    <h1 style="font-family: var(--calligraphy); font-size: 4.5rem; margin:0; letter-spacing: 5px;">小雞手抄</h1>
-    <p style="margin: 10px 0 0 0; font-weight: 300; letter-spacing: 2px;">—— 寫一段話，溫暖一個靈魂 ——</p>
+    <div class="main-title">小雞手抄</div>
+    <p>—— 讓文字，溫暖你的心 ——</p>
 </header>
 
 <div class="container">
-    <div id="user-info">載入中...</div>
+    <div id="user-info">
+        <span id="display-name">載入中...</span>
+        <button id="logout-btn" class="btn btn-sm btn-logout" style="display:none;">登出</button>
+    </div>
 
     <section class="card">
         <h2>墨友排行</h2>
-        <div id="admin-panel">✨ 管理員 Jacob 您好！點擊名單即可快速置頂。</div>
-        <div id="leaderboard-list">正在加載溫暖名單...</div>
+        <div id="leaderboard-list">讀取中...</div>
     </section>
 
     <section class="card">
-        <h2>我也要投稿</h2>
-        <input type="text" id="ig-input" placeholder="你的 Instagram 帳號 (例如: @chick_handwriting)">
-        <textarea id="msg-input" rows="4" placeholder="想看小雞抄寫什麼？或者是想對我說的話..."></textarea>
-        <div class="warning">
-            <strong>💡 記得點開邀請：</strong><br>
-            若被選中，小雞會發送「協作者邀請」。請務必到 IG 訊息點擊接受，作品才會出現在你的主頁喔！
+        <h2>和小雞聊天</h2>
+        <div id="chat-box"></div>
+        <div class="chat-input-group">
+            <input type="text" id="chat-input" placeholder="說點什麼吧...">
+            <button class="btn btn-sm" onclick="sendChatMessage()" style="width: 70px;">發送</button>
         </div>
-        <button class="btn" onclick="submitPost()">送出溫暖投稿</button>
     </section>
 
-    <button id="login-btn" class="btn" style="background: white; color: var(--ink); border: 3px solid var(--ink); margin-bottom: 50px;">
-        👤 粉絲快速登入 / 註冊
-    </button>
+    <section class="card">
+        <h2>我要投稿</h2>
+        <input type="text" id="ig-input" placeholder="你的 IG 帳號">
+        <textarea id="msg-input" rows="3" placeholder="想抄寫的內容..."></textarea>
+        <button class="btn" onclick="submitPost()">送出投稿</button>
+    </section>
+
+    <button id="login-btn" class="btn" style="background:white; color:var(--ink); border:3px solid var(--ink); margin-bottom:50px;">👤 粉絲 Google 登入</button>
 </div>
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-    import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-    import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, doc, updateDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+    import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+    import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, limit, doc, updateDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
     const firebaseConfig = {
         apiKey: "AIzaSyAOnZ6ZHMPS2S3-4C22IQetiIlSGV-OaEU",
@@ -143,77 +126,82 @@
     let currentUser = null;
     const ADMIN_EMAIL = "jacob.wu1523@gmail.com";
 
-    // 登入功能
-    document.getElementById('login-btn').onclick = () => {
-        signInWithPopup(auth, provider).catch(err => {
-            console.error(err);
-            alert("登入失敗，請確認是否已將網域加入 Firebase 的『授權網域』中！");
-        });
-    };
+    // 登入/登出
+    document.getElementById('login-btn').onclick = () => signInWithPopup(auth, provider);
+    document.getElementById('logout-btn').onclick = () => signOut(auth);
 
-    // 狀態監聽
     onAuthStateChanged(auth, (user) => {
         currentUser = user;
-        const infoDiv = document.getElementById('user-info');
         const loginBtn = document.getElementById('login-btn');
-        const adminPanel = document.getElementById('admin-panel');
+        const logoutBtn = document.getElementById('logout-btn');
+        const nameSpan = document.getElementById('display-name');
 
         if (user) {
-            infoDiv.innerText = `Logged in as: ${user.displayName}`;
+            nameSpan.innerText = `👋 ${user.displayName}`;
             loginBtn.style.display = 'none';
-            if (user.email === ADMIN_EMAIL) adminPanel.style.display = 'block';
+            logoutBtn.style.display = 'inline-block';
         } else {
-            infoDiv.innerText = "尚未登入";
+            nameSpan.innerText = "尚未登入";
             loginBtn.style.display = 'block';
-            adminPanel.style.display = 'none';
+            logoutBtn.style.display = 'none';
         }
     });
 
-    // 送出投稿
-    window.submitPost = async () => {
-        const ig = document.getElementById('ig-input').value.trim();
-        const msg = document.getElementById('msg-input').value.trim();
-        if (!currentUser) return alert("請先登入後再投稿喔！");
-        if (!ig || !msg) return alert("欄位都要填寫喔！");
+    // 聊天功能實作
+    window.sendChatMessage = async () => {
+        const text = document.getElementById('chat-input').value.trim();
+        if (!currentUser) return alert("請先登入才能聊天喔！");
+        if (!text) return;
 
-        try {
-            await addDoc(collection(db, "posts"), {
-                ig: ig,
-                message: msg,
-                votes: 0,
-                isPinned: false,
-                timestamp: Date.now()
-            });
-            alert("成功送出！小雞收到了 🐥");
-            document.getElementById('msg-input').value = "";
-        } catch (e) {
-            alert("投稿失敗，請確認 Firestore 規則已開啟。");
-        }
+        await addDoc(collection(db, "chats"), {
+            uid: currentUser.uid,
+            name: currentUser.displayName,
+            email: currentUser.email,
+            text: text,
+            timestamp: Date.now()
+        });
+        document.getElementById('chat-input').value = "";
     };
 
-    // 排行榜即時更新
-    onSnapshot(collection(db, "posts"), (snapshot) => {
+    onSnapshot(query(collection(db, "chats"), orderBy("timestamp", "asc"), limit(50)), (snap) => {
+        const box = document.getElementById('chat-box');
+        box.innerHTML = "";
+        snap.forEach(d => {
+            const m = d.data();
+            const div = document.createElement('div');
+            let type = "msg-other";
+            if (m.email === ADMIN_EMAIL) type = "msg-admin";
+            else if (currentUser && m.uid === currentUser.uid) type = "msg-me";
+            
+            div.className = `chat-msg ${type}`;
+            div.innerHTML = `<small style="display:block; font-size:10px; opacity:0.7;">${m.name}</small>${m.text}`;
+            box.appendChild(div);
+        });
+        box.scrollTop = box.scrollHeight;
+    });
+
+    // 排行榜與投稿 (維持原有功能)
+    window.submitPost = async () => {
+        const ig = document.getElementById('ig-input').value;
+        const msg = document.getElementById('msg-input').value;
+        if (!currentUser || !ig || !msg) return alert("請登入並填寫內容！");
+        await addDoc(collection(db, "posts"), { ig, message: msg, isPinned: false, timestamp: Date.now() });
+        alert("成功！");
+    };
+
+    onSnapshot(collection(db, "posts"), (snap) => {
         const list = document.getElementById('leaderboard-list');
         list.innerHTML = "";
         let posts = [];
-        snapshot.forEach(doc => posts.push({ id: doc.id, ...doc.data() }));
-
-        posts.sort((a, b) => (b.isPinned - a.isPinned) || (b.timestamp - a.timestamp));
-
-        posts.forEach(post => {
+        snap.forEach(d => posts.push({ id: d.id, ...d.data() }));
+        posts.sort((a,b) => (b.isPinned - a.isPinned) || (b.timestamp - a.timestamp));
+        posts.forEach(p => {
             const div = document.createElement('div');
-            div.className = `rank-item ${post.isPinned ? 'pinned' : ''}`;
-            div.innerHTML = `
-                <div style="flex:1">
-                    <span style="font-size:1.1rem">${post.isPinned ? '🌟' : '✒️'} <strong>${post.ig}</strong></span><br>
-                    <small style="color:#777; font-size:0.9rem">${post.message}</small>
-                </div>
-            `;
-            
+            div.className = `rank-item ${p.isPinned ? 'pinned' : ''}`;
+            div.innerHTML = `<span>${p.isPinned ? '🌟' : '🖋️'} ${p.ig}</span>`;
             div.onclick = async () => {
-                if (currentUser && currentUser.email === ADMIN_EMAIL) {
-                    await updateDoc(doc(db, "posts", post.id), { isPinned: !post.isPinned });
-                }
+                if (currentUser && currentUser.email === ADMIN_EMAIL) 
+                    await updateDoc(doc(db, "posts", p.id), { isPinned: !p.isPinned });
             };
             list.appendChild(div);
         });
