@@ -2,31 +2,35 @@
 <html lang="zh-Hant">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>小雞手抄</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>小雞手抄 | 重生版</title>
     <link href="https://fonts.googleapis.com/css2?family=Zhi+Mang+Xing&display=swap" rel="stylesheet">
     <style>
-        :root { --chick: #ffde59; --ink: #2c2c2c; --font: 'Zhi Mang Xing', cursive; }
-        body { background: #fdfaf5; color: var(--ink); font-family: sans-serif; margin: 0; display: flex; flex-direction: column; align-items: center; }
+        :root { --chick: #ffde59; --ink: #2c2c2c; --paper: #fdfaf5; --font: 'Zhi Mang Xing', cursive; }
+        
+        body { background: var(--paper); color: var(--ink); font-family: sans-serif; margin: 0; display: flex; flex-direction: column; align-items: center; }
         header { background: var(--chick); width: 100%; padding: 40px 0; text-align: center; border-bottom: 5px solid var(--ink); }
         
-        /* 這裡強制讓所有標題變書法體 */
-        .main-title, h2 { font-family: var(--font) !important; }
+        /* 標題與標籤強制書法體 */
+        .main-title, h2 { font-family: var(--font) !important; font-weight: normal; }
         .main-title { font-size: 5.5rem; margin: 0; }
-        
-        .container { max-width: 480px; width: 92%; margin-top: 20px; }
-        .card { background: white; border: 3px solid var(--ink); border-radius: 15px; padding: 20px; margin-bottom: 20px; box-shadow: 6px 6px 0 var(--ink); }
-        h2 { font-size: 2.5rem; margin: 0 0 10px 0; border-bottom: 3px solid var(--chick); display: inline-block; }
-        
-        #chat-box { height: 250px; overflow-y: auto; border: 2px solid #ddd; border-radius: 10px; padding: 10px; background: #fff; margin-bottom: 10px; display: flex; flex-direction: column; }
-        .chat-msg { margin-bottom: 8px; padding: 8px 12px; border-radius: 12px; max-width: 85%; font-size: 0.95rem; }
-        .msg-me { background: var(--chick); align-self: flex-end; }
+
+        .container { max-width: 480px; width: 92%; margin: 20px 0; }
+        .card { background: white; border: 3px solid var(--ink); border-radius: 12px; padding: 20px; margin-bottom: 20px; box-shadow: 6px 6px 0 var(--ink); }
+        h2 { font-size: 2.5rem; margin: 0 0 10px 0; display: inline-block; border-bottom: 3px solid var(--chick); }
+
+        /* 聊天室樣式 */
+        #chat-box { height: 300px; overflow-y: auto; border: 2px solid #ddd; border-radius: 10px; padding: 10px; background: #fff; margin-bottom: 10px; display: flex; flex-direction: column; }
+        .msg { margin-bottom: 10px; padding: 10px; border-radius: 10px; max-width: 80%; line-height: 1.4; font-size: 1rem; }
+        .msg-me { background: var(--chick); align-self: flex-end; border: 1px solid #e1c145; }
         .msg-other { background: #eee; align-self: flex-start; }
-        
+
+        input { width: 100%; padding: 12px; border: 2px solid #ddd; border-radius: 8px; box-sizing: border-box; font-size: 1rem; }
         .btn { background: var(--ink); color: white; padding: 15px; border: none; border-radius: 10px; cursor: pointer; width: 100%; font-weight: bold; font-size: 1.2rem; }
-        #profile-modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 99; justify-content: center; align-items: center; }
-        .modal-content { background: white; padding: 25px; border-radius: 15px; width: 85%; text-align: center; border: 4px solid var(--ink); }
-        input { width: 100%; padding: 12px; margin: 10px 0; border: 2px solid #ddd; border-radius: 8px; box-sizing: border-box; }
+        
+        /* 註冊彈窗 */
+        #modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 100; justify-content: center; align-items: center; }
+        .modal-body { background: white; padding: 30px; border-radius: 15px; width: 85%; max-width: 350px; text-align: center; border: 4px solid var(--ink); }
     </style>
 </head>
 <body>
@@ -34,27 +38,32 @@
 <header><div class="main-title">小雞手抄</div></header>
 
 <div class="container">
-    <div id="status-bar" style="text-align:right; margin-bottom:10px; font-weight:bold;">等待登入...</div>
-    
-    <button id="login-btn" class="btn" style="background:white; color:var(--ink); border:3px solid var(--ink); margin-bottom:20px;">👤 點我 Google 登入</button>
-    <button id="logout-btn" class="btn" style="display:none; background:#ff4d4d; margin-bottom:20px;">登出</button>
+    <div id="user-info" style="text-align:right; margin-bottom:10px; font-weight:bold;">系統初始化中...</div>
+
+    <button id="login-btn" class="btn" style="background:white; color:var(--ink); border:3px solid var(--ink); margin-bottom:20px; display:none;">👤 Google 快速登入</button>
+    <button id="logout-btn" class="btn" style="background:#ff4d4d; margin-bottom:20px; display:none;">登出</button>
 
     <section class="card">
         <h2>和小雞聊天</h2>
         <div id="chat-box"></div>
         <div style="display:flex; gap:5px;">
-            <input type="text" id="chat-input" placeholder="說點什麼吧...">
-            <button id="send-btn" style="background:var(--ink); color:white; border:none; padding:0 15px; border-radius:8px;">發送</button>
+            <input type="text" id="chat-input" placeholder="打字說點什麼...">
+            <button id="send-btn" style="background:var(--ink); color:white; border:none; padding:0 15px; border-radius:8px; cursor:pointer;">發送</button>
         </div>
+    </section>
+
+    <section class="card">
+        <h2>名單</h2>
+        <div id="user-list">登入後查看</div>
     </section>
 </div>
 
-<div id="profile-modal">
-    <div class="modal-content">
-        <h2>填寫資料</h2>
-        <input type="text" id="p-nickname" placeholder="暱稱">
-        <input type="text" id="p-ig" placeholder="IG 帳號">
-        <button class="btn" id="save-profile-btn">儲存</button>
+<div id="modal">
+    <div class="modal-body">
+        <h2 style="font-size:2rem;">初次見面！</h2>
+        <input type="text" id="p-nick" placeholder="設定你的暱稱" style="margin-bottom:10px;">
+        <input type="text" id="p-ig" placeholder="你的 IG 帳號" style="margin-bottom:20px;">
+        <button class="btn" id="save-btn">儲存並進入</button>
     </div>
 </div>
 
@@ -72,6 +81,7 @@
         appId: "1:206297835176:web:9d892561a92803f694049d"
     };
 
+    // 初始化
     const app = initializeApp(firebaseConfig);
     const auth = getAuth();
     const db = getFirestore();
@@ -79,15 +89,16 @@
 
     let userProfile = null;
 
-    // 點擊後會直接轉跳到 Google 登入頁面，這能避開所有彈窗被擋的問題
+    // 登入事件 (跳轉式)
     document.getElementById('login-btn').onclick = () => signInWithRedirect(auth, provider);
     document.getElementById('logout-btn').onclick = () => signOut(auth).then(() => location.reload());
 
-    // 處理登入轉跳回來後的結果
-    getRedirectResult(auth).catch(e => console.error("Redirect Error", e));
+    // 處理轉跳回來的結果
+    getRedirectResult(auth).catch(e => alert("登入出錯: " + e.message));
 
+    // 監聽狀態
     onAuthStateChanged(auth, async (user) => {
-        const statusBar = document.getElementById('status-bar');
+        const info = document.getElementById('user-info');
         const loginBtn = document.getElementById('login-btn');
         const logoutBtn = document.getElementById('logout-btn');
 
@@ -95,45 +106,74 @@
             const snap = await getDoc(doc(db, "users", user.uid));
             if (snap.exists()) {
                 userProfile = snap.data();
-                statusBar.innerText = "👋 " + userProfile.nickname;
+                info.innerText = `👋 ${userProfile.nickname}`;
                 loginBtn.style.display = 'none';
                 logoutBtn.style.display = 'block';
-                loadChat();
+                startSync();
             } else {
-                document.getElementById('profile-modal').style.display = 'flex';
+                document.getElementById('modal').style.display = 'flex';
             }
+        } else {
+            info.innerText = "尚未登入";
+            loginBtn.style.display = 'block';
+            logoutBtn.style.display = 'none';
         }
     });
 
-    document.getElementById('save-profile-btn').onclick = async () => {
-        const nickname = document.getElementById('p-nickname').value;
-        const ig = document.getElementById('p-ig').value;
-        if(nickname && ig) {
+    // 儲存資料
+    document.getElementById('save-btn').onclick = async () => {
+        const nickname = document.getElementById('p-nick').value.trim();
+        const ig = document.getElementById('p-ig').value.trim();
+        if (nickname && ig) {
             await setDoc(doc(db, "users", auth.currentUser.uid), { nickname, ig, email: auth.currentUser.email });
             location.reload();
+        } else {
+            alert("請填寫完整內容！");
         }
     };
 
+    // 聊天發送
     document.getElementById('send-btn').onclick = async () => {
-        const text = document.getElementById('chat-input').value;
+        const text = document.getElementById('chat-input').value.trim();
         if (userProfile && text) {
-            await addDoc(collection(db, "chats"), { nickname: userProfile.nickname, text, timestamp: Date.now(), uid: auth.currentUser.uid });
+            await addDoc(collection(db, "chats"), { 
+                name: userProfile.nickname, 
+                text, 
+                ts: Date.now(), 
+                uid: auth.currentUser.uid 
+            });
             document.getElementById('chat-input').value = "";
         }
     };
 
-    function loadChat() {
-        onSnapshot(query(collection(db, "chats"), orderBy("timestamp", "asc"), limit(30)), (snap) => {
+    // 同步聊天與清單
+    function startSync() {
+        // 聊天室
+        onSnapshot(query(collection(db, "chats"), orderBy("ts", "asc"), limit(50)), (snap) => {
             const box = document.getElementById('chat-box');
             box.innerHTML = "";
             snap.forEach(d => {
                 const m = d.data();
                 const div = document.createElement('div');
-                div.className = `chat-msg ${auth.currentUser && m.uid === auth.currentUser.uid ? 'msg-me' : 'msg-other'}`;
-                div.innerHTML = `<small style="display:block; font-size:0.7rem; opacity:0.6;">${m.nickname}</small>${m.text}`;
+                div.className = `msg ${m.uid === auth.currentUser.uid ? 'msg-me' : 'msg-other'}`;
+                div.innerHTML = `<small style="display:block; font-size:0.7rem; opacity:0.6;">${m.name}</small>${m.text}`;
                 box.appendChild(div);
             });
             box.scrollTop = box.scrollHeight;
+        });
+
+        // 名單
+        onSnapshot(collection(db, "users"), (snap) => {
+            const list = document.getElementById('user-list');
+            list.innerHTML = "";
+            snap.forEach(d => {
+                const u = d.data();
+                const div = document.createElement('div');
+                div.style.padding = "8px";
+                div.style.borderBottom = "1px solid #eee";
+                div.innerHTML = `<strong>${u.nickname}</strong> <small style="color:#999">${u.ig}</small>`;
+                list.appendChild(div);
+            });
         });
     }
 </script>
