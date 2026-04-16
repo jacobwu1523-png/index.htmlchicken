@@ -1,144 +1,38 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="zh-TW">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>小鸡手抄</title>
+    <title>雞王粉絲互動系統</title>
     <link href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&display=swap" rel="stylesheet">
-    <style>
-        :root { --chick: #ffde59; --ink: #2c2c2c; --paper: #fdfaf5; --font: 'Ma Shan Zheng', cursive; }
-        body { background: var(--paper); color: var(--ink); font-family: sans-serif; margin: 0; display: flex; flex-direction: column; align-items: center; }
-        header { background: var(--chick); width: 100%; padding: 40px 0; text-align: center; border-bottom: 5px solid var(--ink); width: 100%; }
-        
-        /* 简体书法标题 */
-        .main-title { font-family: var(--font) !important; font-size: 5rem; margin: 0; }
-        h2 { font-family: var(--font) !important; font-size: 2.5rem; margin: 0 0 10px 0; border-bottom: 3px solid var(--chick); display: inline-block; font-weight: normal; }
-
-        .container { max-width: 450px; width: 92%; margin-top: 20px; }
-        .card { background: white; border: 3px solid var(--ink); border-radius: 12px; padding: 20px; margin-bottom: 20px; box-shadow: 6px 6px 0 var(--ink); }
-        
-        #chat-box { height: 250px; overflow-y: auto; border: 2px solid #ddd; border-radius: 10px; padding: 10px; background: #fff; margin-bottom: 10px; display: flex; flex-direction: column; }
-        .msg { margin-bottom: 10px; padding: 8px 12px; border-radius: 10px; max-width: 80%; line-height: 1.4; }
-        .msg-me { background: var(--chick); align-self: flex-end; }
-        .msg-other { background: #eee; align-self: flex-start; }
-
-        .btn { background: var(--ink); color: white; padding: 15px; border: none; border-radius: 10px; cursor: pointer; width: 100%; font-weight: bold; font-size: 1.2rem; margin-bottom: 15px; }
-        input { width: 100%; padding: 12px; border: 2px solid #ddd; border-radius: 8px; box-sizing: border-box; }
-        
-        #modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 100; justify-content: center; align-items: center; }
-        .modal-content { background: white; padding: 25px; border-radius: 15px; width: 80%; text-align: center; border: 4px solid var(--ink); }
-    </style>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<header><div class="main-title">小鸡手抄</div></header>
+    <div id="app">
+        <header>
+            <h1 class="calligraphy">雞</h1>
+            <p>粉絲專屬即時對話</p>
+        </header>
 
-<div class="container">
-    <div id="status" style="text-align:right; font-weight:bold; margin-bottom:10px;">检查系统...</div>
-    
-    <button id="login-btn" class="btn" style="background:white; color:var(--ink); border:3px solid var(--ink);">👤 Google 登录</button>
-    <button id="logout-btn" class="btn" style="background:#ff4d4d; display:none;">退出登录</button>
+        <main id="chat-container">
+            <div class="message fan-bubble">
+                <span class="username">雞粉小明:</span>
+                <p>這隻雞太霸氣了吧！</p>
+            </div>
 
-    <div class="card">
-        <h2>和小鸡聊天</h2>
-        <div id="chat-box"></div>
-        <div style="display:flex; gap:5px;">
-            <input type="text" id="chat-input" placeholder="输入聊天内容...">
-            <button id="send-btn" style="background:var(--ink); color:white; border:none; padding:0 15px; border-radius:8px;">发送</button>
-        </div>
+            <div class="message admin-bubble">
+                <span class="username">Jacob Wu (Admin):</span>
+                <p>歡迎來到我的地盤，保持禮貌。</p>
+            </div>
+        </main>
+
+        <footer id="input-area">
+            <input type="text" id="user-input" placeholder="說點什麼..." maxlength="200">
+            <button id="send-btn">發送</button>
+        </footer>
     </div>
-</div>
 
-<div id="modal">
-    <div class="modal-content">
-        <h2>欢迎加入</h2>
-        <input type="text" id="p-nick" placeholder="你的昵称">
-        <input type="text" id="p-ig" placeholder="你的 IG" style="margin-top:10px;">
-        <button class="btn" id="save-btn" style="margin-top:15px;">保存</button>
-    </div>
-</div>
-
-<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
-<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
-
-<script>
-    const config = {
-        apiKey: "AIzaSyAOnZ6ZHMPS2S3-4C22IQetiIlSGV-OaEU",
-        authDomain: "chicken-39494.firebaseapp.com",
-        projectId: "chicken-39494",
-        storageBucket: "chicken-39494.firebasestorage.app",
-        messagingSenderId: "206297835176",
-        appId: "1:206297835176:web:9d892561a92803f694049d"
-    };
-
-    firebase.initializeApp(config);
-    const auth = firebase.auth();
-    const db = firebase.firestore();
-    const provider = new firebase.auth.GoogleAuthProvider();
-
-    const loginBtn = document.getElementById('login-btn');
-    const statusText = document.getElementById('status');
-
-    // 登录邏輯：加上 Error 捕獲
-    loginBtn.onclick = () => {
-        auth.signInWithPopup(provider).catch(error => {
-            console.error(error);
-            alert("登录失败！错误代号：" + error.code + "\n信息：" + error.message);
-        });
-    };
-
-    document.getElementById('logout-btn').onclick = () => auth.signOut().then(() => location.reload());
-
-    auth.onAuthStateChanged(async user => {
-        if (user) {
-            statusText.innerText = "正在同步个人资料...";
-            const userDoc = await db.collection("users").doc(user.uid).get();
-            if (userDoc.exists) {
-                const data = userDoc.data();
-                statusText.innerText = "👋 " + data.nickname;
-                loginBtn.style.display = 'none';
-                document.getElementById('logout-btn').style.display = 'block';
-                startApp(user.uid, data.nickname);
-            } else {
-                document.getElementById('modal').style.display = 'flex';
-            }
-        } else {
-            statusText.innerText = "未登录";
-        }
-    });
-
-    document.getElementById('save-btn').onclick = async () => {
-        const nick = document.getElementById('p-nick').value;
-        const ig = document.getElementById('p-ig').value;
-        if(nick && ig) {
-            await db.collection("users").doc(auth.currentUser.uid).set({ nickname: nick, ig, email: auth.currentUser.email });
-            location.reload();
-        }
-    };
-
-    function startApp(uid, nickname) {
-        document.getElementById('send-btn').onclick = async () => {
-            const text = document.getElementById('chat-input').value;
-            if(text) {
-                await db.collection("chats").add({ nickname, text, uid, timestamp: firebase.firestore.FieldValue.serverTimestamp() });
-                document.getElementById('chat-input').value = "";
-            }
-        };
-
-        db.collection("chats").orderBy("timestamp", "asc").limitToLast(30).onSnapshot(snap => {
-            const box = document.getElementById('chat-box');
-            box.innerHTML = "";
-            snap.forEach(d => {
-                const m = d.data();
-                const div = document.createElement('div');
-                div.className = `msg ${m.uid === uid ? 'msg-me' : 'msg-other'}`;
-                div.innerHTML = `<small style="display:block; font-size:0.6rem; opacity:0.5;">${m.nickname}</small>${m.text}`;
-                box.appendChild(div);
-            });
-            box.scrollTop = box.scrollHeight;
-        });
-    }
-</script>
+    <script src="app.js"></script>
 </body>
 </html>
